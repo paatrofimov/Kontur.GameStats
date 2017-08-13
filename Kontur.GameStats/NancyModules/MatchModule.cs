@@ -25,19 +25,19 @@ namespace Kontur.GameStats.NancyModules
 				return HttpStatusCode.BadRequest;
 			if (!DbQueries.ServerExists(endpoint))
 			{
-				ConsoleLogger.LogBadQuery(Request, HttpStatusCode.BadRequest, LogErrorMessages.AdvertisingError);
+				MyLogger.LogBadQuery(Request, HttpStatusCode.BadRequest, LogErrorMessages.AdvertisingError);
 				return HttpStatusCode.BadRequest;
 			}
 			if (DbQueries.MatchExists(endpoint, matchTimestamp))
 			{
-				ConsoleLogger.LogBadQuery(Request, HttpStatusCode.MethodNotAllowed, LogErrorMessages.MatchesCollision);
+				MyLogger.LogBadQuery(Request, HttpStatusCode.MethodNotAllowed, LogErrorMessages.MatchesCollision);
 				return HttpStatusCode.MethodNotAllowed;
 			}
 			var matchJson = this.Bind<MatchJsonModel>();
 			var scoreboardHasCollision = matchJson.Scoreboard.Distinct().Count() < matchJson.Scoreboard.Count;
 			if (scoreboardHasCollision)
 			{
-				ConsoleLogger.LogBadQuery(Request, HttpStatusCode.MethodNotAllowed, LogErrorMessages.ScoreboardCollision);
+				MyLogger.LogBadQuery(Request, HttpStatusCode.MethodNotAllowed, LogErrorMessages.ScoreboardCollision);
 				return HttpStatusCode.MethodNotAllowed;
 			}
 			DbQueries.UpdateDatabaseWithMatch(matchTimestamp, endpoint, matchJson);
@@ -53,7 +53,7 @@ namespace Kontur.GameStats.NancyModules
 			var matchJson = DbQueries.TrySelectMatch(endpoint, timestamp);
 			if (matchJson == null)
 			{
-				ConsoleLogger.LogBadQuery(Request, HttpStatusCode.NotFound, LogErrorMessages.MissingMatch);
+				MyLogger.LogBadQuery(Request, HttpStatusCode.NotFound, LogErrorMessages.MissingMatch);
 				return HttpStatusCode.NotFound;
 			}
 			return matchJson;

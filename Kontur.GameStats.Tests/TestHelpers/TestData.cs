@@ -64,9 +64,9 @@ namespace Kontur.GameStats.Tests.TestHelpers
 			};
 			ServerInfoJsons = new List<ServerInfoJsonModel>
 			{
-				new ServerInfoJsonModel {Server = "ServerName-0", GameModes = new[] {"Mode-0", "Mode-1", "Mode-2"}},
-				new ServerInfoJsonModel {Server = "ServerName-1", GameModes = new[] {"Mode-3", "Mode-4"}},
-				new ServerInfoJsonModel {Server = "ServerName-2", GameModes = new[] {"Mode-5"}}
+				new ServerInfoJsonModel {Name = "ServerName-0", GameModes = new[] {"Mode-0", "Mode-1", "Mode-2"}},
+				new ServerInfoJsonModel {Name = "ServerName-1", GameModes = new[] {"Mode-3", "Mode-4"}},
+				new ServerInfoJsonModel {Name = "ServerName-2", GameModes = new[] {"Mode-5"}}
 			};
 			Timestamps = new List<DateTime>
 			{

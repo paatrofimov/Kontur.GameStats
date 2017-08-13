@@ -54,7 +54,7 @@ namespace Kontur.GameStats.Tests
 				.Be(new ServerInfoJsonModel
 				{
 					GameModes = TestData.ServerInfoJsons[0].GameModes,
-					Server = TestData.ServerInfoJsons[0].Server
+					Name = TestData.ServerInfoJsons[0].Name
 				});
 		}
 
@@ -63,8 +63,10 @@ namespace Kontur.GameStats.Tests
 		{
 			var response = MakeRequest.GetAllServerInfos();
 
-			var infos = JsonConvert.DeserializeObject<List<ServerInfoJsonModel>>(response.Body.AsString());
-			infos.Should().OnlyContain(s => TestData.ServerInfoJsons.Contains(s));
+			var allInfos = JsonConvert.DeserializeObject<List<AllServerInfoJsonModel>>(response.Body.AsString());
+			TestData.Endpoints.Should().OnlyContain(e => allInfos.Select(each => each.Endpoint).Contains(e));
+			var infos = allInfos.Select(each => JsonConvert.DeserializeObject<ServerInfoJsonModel>(each.Info));
+			TestData.ServerInfoJsons.Should().OnlyContain(i => infos.Contains(i));
 		}
 
 		[Test]

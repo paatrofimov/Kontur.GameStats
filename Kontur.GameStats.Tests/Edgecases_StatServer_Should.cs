@@ -1,10 +1,12 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using FluentAssertions;
 using Kontur.GameStats.Database;
 using Kontur.GameStats.Infrastructure.Logging;
 using Kontur.GameStats.Models.Json;
 using Kontur.GameStats.Tests.TestHelpers;
+using log4net.Config;
 using Nancy;
 using Nancy.Testing;
 using Newtonsoft.Json;
@@ -15,10 +17,18 @@ namespace Kontur.GameStats.Tests
 	[TestFixture]
 	public class Edgecases_Statserver_Should
 	{
+		private string logDir => Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Logs");
+		private string[] loggedEvents => File.ReadAllLines(Path.Combine(logDir, "LoggerFileName.log"));
+
 		[OneTimeSetUp]
 		public void OneTimeSetUp()
 		{
 			MyDbContext.IsForUnitTests = true;
+			if (Directory.Exists(logDir))
+			{
+				Directory.Delete(logDir, recursive: true);
+			}
+			XmlConfigurator.Configure();
 		}
 
 		[TearDown]
@@ -41,12 +51,10 @@ namespace Kontur.GameStats.Tests
 		{
 			MakeRequest.PutMatch(TestData.MatchEntities[0]);
 
-			ConsoleLogger.Events.Last()
+			loggedEvents.Last()
 				.Should()
-				.Be(
-					$"Bad query: PUT {MakeRequest.LastRequestUrl} \r\n" +
-					"\t responded with http code 'BadRequest' \r\n" +
-					$"Message: {LogErrorMessages.AdvertisingError} \r\n\r\n"
+				.EndWith(
+					$"Bad query: PUT {MakeRequest.LastRequestUrl}. Responded with http code 'BadRequest'. Message: {LogErrorMessages.AdvertisingError}"
 				);
 		}
 
@@ -63,12 +71,10 @@ namespace Kontur.GameStats.Tests
 		{
 			MakeRequest.GetServerInfo(TestData.Endpoints[0]);
 
-			ConsoleLogger.Events.Last()
+			loggedEvents.Last()
 				.Should()
-				.Be(
-					$"Bad query: GET {MakeRequest.LastRequestUrl} \r\n" +
-					"\t responded with http code 'NotFound' \r\n" +
-					$"Message: {LogErrorMessages.MissingServerinfo} \r\n\r\n"
+				.EndWith(
+					$"Bad query: GET {MakeRequest.LastRequestUrl}. Responded with http code \'NotFound\'. Message: {LogErrorMessages.MissingServerinfo}"
 				);
 		}
 
@@ -86,12 +92,10 @@ namespace Kontur.GameStats.Tests
 		{
 			MakeRequest.GetAllServerInfos();
 
-			ConsoleLogger.Events.Last()
+			loggedEvents.Last()
 				.Should()
-				.Be(
-					$"Bad query: GET {MakeRequest.LastRequestUrl} \r\n" +
-					"\t responded with http code 'NotFound' \r\n" +
-					$"Message: {LogErrorMessages.MissingAnyServerinfo} \r\n\r\n"
+				.EndWith(
+					$"Bad query: GET {MakeRequest.LastRequestUrl}. Responded with http code 'NotFound'. Message: {LogErrorMessages.MissingAnyServerinfo}"
 				);
 		}
 
@@ -114,12 +118,10 @@ namespace Kontur.GameStats.Tests
 			MakeRequest.PutMatch(TestData.MatchEntities[0]);
 			MakeRequest.PutMatch(TestData.MatchEntities[0]);
 
-			ConsoleLogger.Events.Last()
+			loggedEvents.Last()
 				.Should()
-				.Be(
-					$"Bad query: PUT {MakeRequest.LastRequestUrl} \r\n" +
-					"\t responded with http code 'MethodNotAllowed' \r\n" +
-					$"Message: {LogErrorMessages.MatchesCollision} \r\n\r\n"
+				.EndWith(
+					$"Bad query: PUT {MakeRequest.LastRequestUrl}. Responded with http code 'MethodNotAllowed'. Message: {LogErrorMessages.MatchesCollision}"
 				);
 		}
 
@@ -139,12 +141,10 @@ namespace Kontur.GameStats.Tests
 			MakeRequest.PutServerInfo(TestData.Endpoints[0], TestData.ServerInfoJsons[0]);
 			MakeRequest.PutMatch(TestData.MatchWithScoreboardCollision);
 
-			ConsoleLogger.Events.Last()
+			loggedEvents.Last()
 				.Should()
-				.Be(
-					$"Bad query: PUT {MakeRequest.LastRequestUrl} \r\n" +
-					"\t responded with http code 'MethodNotAllowed' \r\n" +
-					$"Message: {LogErrorMessages.ScoreboardCollision} \r\n\r\n"
+				.EndWith(
+					$"Bad query: PUT {MakeRequest.LastRequestUrl}. Responded with http code 'MethodNotAllowed'. Message: {LogErrorMessages.ScoreboardCollision}"
 				);
 		}
 
@@ -185,7 +185,7 @@ namespace Kontur.GameStats.Tests
 				.Be(new ServerInfoJsonModel
 				{
 					GameModes = TestData.ServerInfoJsons[0].GameModes,
-					Server = TestData.ServerInfoJsons[0].Server
+					Name = TestData.ServerInfoJsons[0].Name
 				});
 		}
 

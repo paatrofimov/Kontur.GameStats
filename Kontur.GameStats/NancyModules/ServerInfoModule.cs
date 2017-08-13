@@ -28,7 +28,7 @@ namespace Kontur.GameStats.NancyModules
 			var serverinfo = DbQueries.TrySelectServerInfo(parameters.endpoint);
 			if (serverinfo == null)
 			{
-				ConsoleLogger.LogBadQuery(Request, HttpStatusCode.NotFound,
+				MyLogger.LogBadQuery(Request, HttpStatusCode.NotFound,
 					LogErrorMessages.MissingServerinfo);
 				return HttpStatusCode.NotFound;
 			}
@@ -40,7 +40,7 @@ namespace Kontur.GameStats.NancyModules
 			var serverInfos = DbQueries.SelectAllServerInfos();
 			if (!serverInfos.Any())
 			{
-				ConsoleLogger.LogBadQuery(Request, HttpStatusCode.NotFound,
+				MyLogger.LogBadQuery(Request, HttpStatusCode.NotFound,
 					LogErrorMessages.MissingAnyServerinfo);
 				return Response.AsJson("", HttpStatusCode.NotFound);
 			}

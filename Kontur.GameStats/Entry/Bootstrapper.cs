@@ -1,5 +1,6 @@
 ﻿using System;
 using Kontur.GameStats.Infrastructure;
+using log4net.Config;
 using Nancy;
 using Nancy.Bootstrapper;
 using Nancy.TinyIoc;
@@ -12,6 +13,7 @@ namespace Kontur.GameStats.Entry
 		protected override void ConfigureApplicationContainer(TinyIoCContainer container)
 		{
 			base.ConfigureApplicationContainer(container);
+			XmlConfigurator.Configure();
 			container.Register<JsonSerializer, CamelCaseJsonSerializer>();
 		}
 

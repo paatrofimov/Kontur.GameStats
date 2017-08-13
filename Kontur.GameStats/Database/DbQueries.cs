@@ -48,7 +48,7 @@ namespace Kontur.GameStats.Database
 				var entity = new ServerEntityModel
 				{
 					Endpoint = endpoint,
-					Server = serverInfoJson.Server,
+					Server = serverInfoJson.Name,
 					GameModes = JsonConvert.SerializeObject(serverInfoJson.GameModes)
 				};
 				var oldServer = ctx.Servers.Find(endpoint);
@@ -61,14 +61,14 @@ namespace Kontur.GameStats.Database
 			}
 		}
 
-		public static ServerInfoJsonModel[] SelectAllServerInfos()
+		public static AllServerInfoJsonModel[] SelectAllServerInfos()
 		{
 			using (var ctx = new MyDbContext())
 			{
 				return ctx.Servers
 					.ToArray()
-					.Select(entity => new ServerInfoJsonModel(entity))
-					.OrderBy(json => json.Server)
+					.Select(entity => new AllServerInfoJsonModel(entity))
+					.OrderBy(json => json.Endpoint)
 					.ToArray();
 			}
 		}

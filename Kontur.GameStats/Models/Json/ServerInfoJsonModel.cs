@@ -13,11 +13,11 @@ namespace Kontur.GameStats.Models.Json
 
 		public ServerInfoJsonModel(ServerEntityModel entity)
 		{
-			Server = entity.Server;
+			Name = entity.Server;
 			GameModes = JsonConvert.DeserializeObject<ICollection<string>>(entity.GameModes);
 		}
 
-		public string Server { get; set; }
+		public string Name { get; set; }
 		public ICollection<string> GameModes { get; set; } = new List<string>();
 
 
@@ -25,7 +25,7 @@ namespace Kontur.GameStats.Models.Json
 
 		protected bool Equals(ServerInfoJsonModel other)
 		{
-			return string.Equals(Server, other.Server) && GameModes.SequenceEqual(other.GameModes);
+			return string.Equals(Name, other.Name) && GameModes.SequenceEqual(other.GameModes);
 		}
 
 		public override bool Equals(object obj)
@@ -40,7 +40,7 @@ namespace Kontur.GameStats.Models.Json
 		{
 			unchecked
 			{
-				return ((Server != null ? Server.GetHashCode() : 0) * 397) ^
+				return ((Name != null ? Name.GetHashCode() : 0) * 397) ^
 				       (GameModes != null ? GameModes.GetHashCode() : 0);
 			}
 		}

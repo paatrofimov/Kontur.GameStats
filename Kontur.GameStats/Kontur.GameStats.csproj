@@ -47,6 +47,9 @@
       <HintPath>..\packages\FluentCommandLineParser.1.4.3\lib\net35\FluentCommandLineParser.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Owin, Version=3.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Owin.3.1.0\lib\net45\Microsoft.Owin.dll</HintPath>
     </Reference>
@@ -113,12 +116,13 @@
     <Compile Include="Infrastructure\CamelCaseJsonSerializer.cs" />
     <Compile Include="Infrastructure\DateTimeExt.cs" />
     <Compile Include="Infrastructure\DictionaryExt.cs" />
-    <Compile Include="Infrastructure\Logging\ConsoleLogger.cs" />
+    <Compile Include="Infrastructure\Logging\MyLogger.cs" />
     <Compile Include="Infrastructure\Logging\LogErrorMessages.cs" />
     <Compile Include="Infrastructure\StringExt.cs" />
     <Compile Include="Models\Entities\MatchEntityModel.cs" />
     <Compile Include="Models\Entities\PlayerEntityModel.cs" />
     <Compile Include="Models\Entities\ServerEntityModel.cs" />
+    <Compile Include="Models\Json\AllServerInfoJsonModel.cs" />
     <Compile Include="Models\Json\BestPlayerJsonModel.cs" />
     <Compile Include="Models\Json\MatchJsonModel.cs" />
     <Compile Include="Models\Json\PlayerJsonModel.cs" />
